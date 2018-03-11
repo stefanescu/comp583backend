@@ -28,6 +28,8 @@ public class GameServlet extends HttpServlet {
                 Game game = new Game();
                 game.setId(resultSet.getInt("id"));
                 game.setName(resultSet.getString("name"));
+                game.setPublisher(resultSet.getString("publisher"));
+                game.setReleaseDate(resultSet.getTimestamp("release_date"));
                 games.add(game);
             }
         } catch (SQLException e) {
