@@ -3,11 +3,11 @@ package com.comp680backend.util;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
-import com.google.appengine.repackaged.org.joda.time.DateTime;
-import com.google.appengine.repackaged.org.joda.time.DateTimeZone;
-import com.google.appengine.repackaged.org.joda.time.format.DateTimeFormat;
-import com.google.appengine.repackaged.org.joda.time.format.DateTimeFormatter;
 import com.google.appengine.tools.cloudstorage.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +64,7 @@ public class CloudStorageUtil {
 
             ServingUrlOptions options = ServingUrlOptions.Builder
                     .withGoogleStorageFileName("/gs/" + BUCKET_NAME + "/" + fileName)
-                    .secureUrl(true);
+                    .secureUrl(false);
             return imagesService.getServingUrl(options);
         }
         return null;
