@@ -32,17 +32,21 @@ public class GoogleAuthUtil {
         System.out.println("verifying");
         try {
             idToken = verifier.verify(idTokenString);
-            System.out.println("verified!");
 
         } catch (GeneralSecurityException e) {
+
+            System.out.println("\n verifying issue!");
             e.printStackTrace();
         } catch (IOException e) {
+
+            System.out.println("\n verifying issue!");
             e.printStackTrace();
         }
 
         if (idToken != null) {
             Payload payload = idToken.getPayload();
-
+            System.out.println("verified!");
+            
             // Print user identifier
             String userId = payload.getSubject();
             System.out.println("User ID: " + userId);
