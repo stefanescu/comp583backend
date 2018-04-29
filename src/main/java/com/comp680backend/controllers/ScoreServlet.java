@@ -52,11 +52,11 @@ public class ScoreServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer gameId = Integer.valueOf(req.getParameter("gameId"));
-        Integer userId = Integer.valueOf(req.getParameter("userID"));
+        Integer userId = Integer.valueOf(req.getParameter("userId"));
         Integer score = Integer.valueOf(req.getParameter("score"));
         String imageUrl = req.getParameter("imageUrl");
 
-        String insertNewScore = "INSERT INTO scores (gameId, userId, score, image_url) VALUES (?,?,?,?)";
+        String insertNewScore = "INSERT INTO scores (games_id, users_id, score, image_url) VALUES (?,?,?,?)";
 
         Connection conn = CloudSqlManager.getInstance().getConn();
         try {
