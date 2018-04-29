@@ -9,7 +9,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class GoogleAuthUtil {
@@ -23,7 +27,8 @@ public class GoogleAuthUtil {
 //            //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
 //            .build();
     private GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(UrlFetchTransport.getDefaultInstance(), jacksonFactory)
-            .setAudience(Collections.singletonList("748827521810-jo9ad9o7brpjmhdb1h7movd6m865c3f5.apps.googleusercontent.com"))//CRLConstants.ANDROID_CLIENT_ID_RELEASE, CRLConstants.ANDROID_CLIENT_ID_DEBUG))
+            .setAudience(Arrays.asList("748827521810-jo9ad9o7brpjmhdb1h7movd6m865c3f5.apps.googleusercontent.com",
+                    "780384510375-31ga7gu7q14u9qo1o4cc4e859nfsms4r.apps.googleusercontent.com"))//CRLConstants.ANDROID_CLIENT_ID_RELEASE, CRLConstants.ANDROID_CLIENT_ID_DEBUG))
             .build();
 
     public User authenticate(String idTokenString) {
@@ -62,16 +67,58 @@ public class GoogleAuthUtil {
             String familyName = (String) payload.get("family_name");
             String givenName = (String) payload.get("given_name");
 
-            User user = new User();
-            user.setEmail(email);
-            user.setUserName(email);
-            user.setId(0);
+
+
+            User user = getUserFromDB(email);
+            //new User if not in DB
+            if(user == null) {
+                user = createUserInDB(email);
+            }
             return user;
 
         } else {
             System.out.println("Invalid ID token.");
             return null;
         }
+    }
+
+    private User createUserInDB(String email) {
+        Connection conn = CloudSqlManager.getInstance().getConn();
+        String insertNewUser = "INSERT INTO users (username, email) VALUES (?,?)";
+        try {
+
+            PreparedStatement preparedStatement = conn.prepareStatement(insertNewUser);
+            preparedStatement.setString(1, email.substring(0, email.indexOf("@")));
+            preparedStatement.setString(2, email);
+            preparedStatement.execute();
+            return getUserFromDB(email);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User getUserFromDB(String userEmail) {
+        Connection conn = CloudSqlManager.getInstance().getConn();
+        String getUser = "SELECT * FROM users WHERE email = ?";
+
+        User user = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(getUser);
+            preparedStatement.setString(1, userEmail);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.first()) {
+                user = new User();
+                String email = resultSet.getString("email");
+                user.setId(resultSet.getInt("id"));
+                user.setEmail(email);
+                user.setUserName(email.substring(0, email.indexOf("@")));
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+           return user;
+        }
+        return user;
     }
 }
 
