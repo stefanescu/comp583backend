@@ -75,7 +75,7 @@ public class CloudSqlManager {
 
     private static CloudSqlManager instance;
     public static CloudSqlManager getInstance() {
-        if(instance == null) {
+        if(instance == null || instance.conn == null) {
             instance = new CloudSqlManager();
             instance.initConnection();
         }
