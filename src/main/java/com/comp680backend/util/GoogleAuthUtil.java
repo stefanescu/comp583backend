@@ -27,8 +27,7 @@ public class GoogleAuthUtil {
 //            //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
 //            .build();
     private GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(UrlFetchTransport.getDefaultInstance(), jacksonFactory)
-            .setAudience(Arrays.asList("748827521810-jo9ad9o7brpjmhdb1h7movd6m865c3f5.apps.googleusercontent.com",
-                    "780384510375-31ga7gu7q14u9qo1o4cc4e859nfsms4r.apps.googleusercontent.com"))//CRLConstants.ANDROID_CLIENT_ID_RELEASE, CRLConstants.ANDROID_CLIENT_ID_DEBUG))
+            .setAudience(Arrays.asList("748827521810-jo9ad9o7brpjmhdb1h7movd6m865c3f5.apps.googleusercontent.com"))//CRLConstants.ANDROID_CLIENT_ID_RELEASE, CRLConstants.ANDROID_CLIENT_ID_DEBUG))
             .build();
 
     public User authenticate(String idTokenString) {

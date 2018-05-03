@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class CloudStorageUtil {
-    public static final String BUCKET_NAME = "comp680projectimage";
+    public static final String BUCKET_NAME = "comp583";
 
     // [START gcs]
     private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
